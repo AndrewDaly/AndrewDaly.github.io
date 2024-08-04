@@ -77,7 +77,14 @@ var i;
 
 for (i = 0; i < coll.length; i++) { coll[i].addEventListener("click", function() { this.classList.toggle("active"); var content=this.nextElementSibling; if (content.style.display==="block" ) { content.style.display="none" ; } else { content.style.display="block" ; } }); }
 
-
+document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 37) {
+        alert('Left was pressed');
+    }
+    else if(event.keyCode == 39) {
+        alert('Right was pressed');
+    }
+});
 </script>
 </body>
 </html>
