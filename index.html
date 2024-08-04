@@ -43,7 +43,13 @@ kbd {
 <a href="https://github.com/AndrewDaly/">
     Link to my porfolio</a>
 <br>
-<p>Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy text (Windows).</p>
+
+<div
+    className='container'>
+    <p
+        className='element' id='replace-me'></p>
+</div>
+<!--<p>Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy text (Windows).</p>-->
 
 <button type="button" class="collapsible">Open Collapsible</button>
 <br>
@@ -80,11 +86,16 @@ for (i = 0; i < coll.length; i++) { coll[i].addEventListener("click", function()
 document.addEventListener('keydown', function(event) {
     if(event.keyCode == 37) {
         alert('Left was pressed');
+        document.getElementById('replace-me').innerText = 'updated'
+
     }
     else if(event.keyCode == 39) {
         alert('Right was pressed');
     }
 });
+
+
+
 </script>
 </body>
 </html>
