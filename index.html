@@ -43,10 +43,10 @@
         <p>Type 's' to return.</p>
     </div>
 
-    <button class="collapsible">Resume information(Type 'g' to see more)</button>
+    <button class="collapsible">Resume information(Type 'w' to see more)</button>
     <div class="content">
         <p>This is the collapsible content.</p>
-        <p>Type 'g' to return.</p>
+        <p>Type 'w' to return.</p>
     </div>
     <br>
     <br>
@@ -71,10 +71,10 @@
                 if (event.key === 's') {
                     content[1].style.display = content[1].style.display === "block" ? "none" : "block";
                 }
-                if (event.key === 'g') {
+                if (event.key === 'w') {
                     content[2].style.display = content[2].style.display === "block" ? "none" : "block";
-                                        console.log('Toggling content[2]');
-                                        console.log(event.key);
+                    console.log('Toggling content[2]');
+                    console.log(event.key);
 
                 }
                 if (event.key === 'q') {
