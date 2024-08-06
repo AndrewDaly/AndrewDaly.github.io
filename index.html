@@ -55,11 +55,11 @@
 
     <script>
         document.addEventListener('keydown', function(event) {
-        if (event.key === 'q' || event.key === 'Q') {
-            if (event.code === 'KeyQ') {
-            alert('qqqqq')
-            document.getElementById('git_link').click()
+        if (event.code === 'KeyQ') {
+            window.open('https://github.com', '_blank');
+            //document.getElementById('git_link').click();
         }
+        });
 
         document.addEventListener('DOMContentLoaded', function() {
             var coll = document.getElementsByClassName("collapsible");
