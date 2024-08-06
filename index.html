@@ -1,120 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapsible Section</title>
     <style>
-	.collapsible {
-	  background-color: #777;
-	  color: white;
-	  cursor: pointer;
-	  padding: 18px;
-	  width: 100%;
-	  border: none;
-	  text-align: left;
-	  outline: none;
-	  font-size: 15px;
-	}
-
-	.active, .collapsible:hover {
-  	background-color: #555;
-	}
-
-	.content {
-  	padding: 0 18px;
-  	display: none;
-  	overflow: hidden;
-  	background-color: #f1f1f1;
-	}
-    </style>
-    <style>
-kbd {
-  border-radius: 2px;
-  padding: 2px;
-  border: 1px solid black;
-}
         body {
             background-color:#000000;
+        }
+        .collapsible {
+            background-color: #777;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+        }
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #999;
         }
     </style>
 </head>
 <body>
-<h2 style="color:#FFFFFF">Andrew Daly Github Website</h2>
-<p style="color:#FFFFFF">andrewdaly.github.io</p>
-<a style="color:#0374ff" id="git_link" href="https://github.com/AndrewDaly/">Link to my porfolio</a>
-<br>
-<div className='container'>
-    <p className='element' id='replace-me'></p>
-</div>
-<!--<p>Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy text (Windows).</p>-->
-
-<!--<button type="button" class="collapsible">Open Collapsible</button>-->
-<br>
-<div id="section_1" class="content">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat.</p>
-</div>
-<button id="section_1_id" type="button" class="collapsible">Open Section 1</button>
-<div class="content">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat.</p>
-</div>
-<button type="button" class="collapsible">Open Section 2</button>
-<div class="content">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat.</p>
-</div>
-<button type="button" class="collapsible">Open Section 3</button>
-<div class="content">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat.</p>
-</div>
-<div class="panel-group">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" href="#collapse1">Collapsible panel</a>
-      </h4>
+    <br>
+    <h2 style="color:#FFFFFF">Andrew Daly Github Website</h2>
+    <br>
+    <button class="collapsible">Email Message Automation Project (Type 'a' to see more)</button>
+    <div class="content">
+        <p>This is the collapsible content.</p>
+        <p>Type 'a' to return.</p>
     </div>
-    <div id="collapse1" class="panel-collapse collapse">
-      <div class="panel-body">Panel Body</div>
-      <div class="panel-footer">Panel Footer</div>
+
+    <button class="collapsible">Auto Hot Key Scripts (Type 'b' to see more)</button>
+    <div class="content">
+        <p>This is the collapsible content.</p>
+        <p>Type 'b' to return.</p>
     </div>
-  </div>
-</div>
 
-<script>
-var coll = document.getElementsByClassName("collapsible");
-var i;
-for (i = 0; i <coll.length; i++) {
-    coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content=this.nextElementSibling;
-    if (content.style.display==="block" ) {
-        content.style.display="none" ;
-    }
-    else {
-        content.style.display="block" ;
-    }
-    });
-}
+    <button class="collapsible">Resume (Type 'c' to see more)</button>
+    <div class="content">
+        <p>This is the collapsible content.</p>
+        <p>Type 'c' to return.</p>
+    </div>
+    <br>
+    <br>
+    <a style="color:#0374ff" id="git_link" href="https://github.com/AndrewDaly/">Link to my porfolio</a>
 
-document.addEventListener('keydown', function(event) {
-    if(event.keyCode == 37) {
-        alert('Left was pressed');
-        document.getElementById('replace-me').innerText = 'updated'
-        document.getElementById('git_link').click()
-    }
-    else if(event.keyCode == 39) {
-        alert('Right was pressed');
-        document.getElementById('collapse_button').click()
-        document.getElementById('section_1_id').click()
-    }
-});
 
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var coll = document.getElementsByClassName("collapsible");
+            var content = document.getElementsByClassName("content");
+
+            for (let i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function() {
+                    content[i].style.display = content[i].style.display === "block" ? "none" : "block";
+                });
+            }
+
+            document.addEventListener('keypress', function(event) {
+                if (event.key === 'a') {
+                    content[0].style.display = content[0].style.display === "block" ? "none" : "block";
+                }
+                if (event.key === 'b') {
+                    content[1].style.display = content[1].style.display === "block" ? "none" : "block";
+                }
+                if (event.key === 'c') {
+                    content[2].style.display = content[2].style.display === "block" ? "none" : "block";
+                }
+            });
+        });
+    </script>
 </body>
 </html>
