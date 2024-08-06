@@ -50,10 +50,17 @@
     </div>
     <br>
     <br>
-    <a style="color:#0374ff" id="git_link" href="https://github.com/AndrewDaly/">Link to my porfolio</a>
+    <a style="color:#0374ff" id="git_link" href="https://github.com/AndrewDaly/">Link to my GitHub Porfolio (Type 'q')</a>
 
 
     <script>
+        document.addEventListener('keydown', function(event) {
+        if (event.key === 'q' || event.key === 'Q') {
+            if (event.code === 'KeyQ') {
+            alert('qqqqq')
+            document.getElementById('git_link').click()
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             var coll = document.getElementsByClassName("collapsible");
             var content = document.getElementsByClassName("content");
