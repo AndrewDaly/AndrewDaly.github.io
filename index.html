@@ -54,13 +54,6 @@
 
 
     <script>
-        document.addEventListener('keydown', function(event) {
-        if (event.code === 'KeyQ') {
-            window.open('https://github.com', '_blank');
-            //document.getElementById('git_link').click();
-        }
-        });
-
         document.addEventListener('DOMContentLoaded', function() {
             var coll = document.getElementsByClassName("collapsible");
             var content = document.getElementsByClassName("content");
@@ -71,7 +64,7 @@
                 });
             }
 
-            document.addEventListener('keypress', function(event) {
+            document.addEventListener('keydown', function(event) {
                 if (event.key === 'a') {
                     content[0].style.display = content[0].style.display === "block" ? "none" : "block";
                 }
@@ -80,6 +73,9 @@
                 }
                 if (event.key === 'd') {
                     content[2].style.display = content[2].style.display === "block" ? "none" : "block";
+                }
+                if (event.key === 'q') {
+                    window.open('https://github.com/AndrewDaly/', '_blank');
                 }
             });
         });
