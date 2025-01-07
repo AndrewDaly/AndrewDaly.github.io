@@ -44,22 +44,30 @@
         <a href="about.html">About</a>
     </div>
 
-    <button class="collapsible">AutoHot Key Scripts (Type 's' to see more)</button>
+    <button class="collapsible">StaticHands (Type 's' to see more)</button>
     <div class="content">
-        <p>AutoHotKey is a powerful scripting language to automate scripts and create custom hotkeys.</p>
+        <p>StaticHands is a project to improve user-computation interaction.</p>
         <br>
-        <p>Inspired by almogtavor's script (linked below) I created my own AHK static hands script written in AHK version 2</p>
-        <p>In my opinion, this type of shortkey script should be more widely adopted</p>
-        <p>Keyboard navigation should be more widespread for efficiency as well as accessibility reasons</p>
-        <p>My script centers hotkeys around 'j', one of the least used letters in the English language</p>
-        <p>'j' also sits on the homerow of most keyboards, this script repurposes it to be more useful</p>
-
-        <a style="color:#bcb9f0", id="Link_to_AHK_Website", href=https://www.autohotkey.com">Link to AutoHotKey site</a>
-        <br>
-        <a style="color:#bcb9f0", id="Link_to_AHK_Documentation", href=https://www.autohotkey.com/docs/v2/">Link to AutoHotKey documentation</a>
-        <br>
-        <a style="color:#bcb9f0", id="Link_to_git_static_hands_version", href=https://github.com/almogtavor/static-hands">Link to almogtavor's git repos</a>
-        <br>
+        <pre>
+            In my opinion, most computer users are interacting with their physical machines in a suboptimal manner.
+            People can type on their keyboards far faster than they can use a mouse to point and click.
+            However, the majority of software relies primarily on slower mouse-based navigation.
+            When hotkeys exist, they are often essentially an after thought or are inconsistent.
+            But unavoidably, they rely on moving your hand off the homerow keys of the keyboard to press 'ctrl'.
+            Pressing obscure key chord centered on 'ctrl' or 'alt' is slow and unwieldy and inefficient.
+            All that hinders the use of such hotkeys, which are meant to save time in the first place.
+            I believe that there is a better way for people to interact with their machines.
+            Which is why I started this project, in order to improve my own efficiency and practice some coding skills.
+            Essentially, this project revamps the 'j' key to 'ctrl', and adds a ui based keyboard navigation mode.
+            Typing 'ja' is equal to 'ctrl' + 'a', 'jf' types the 'j' key, and typing 'j' alone does nothing.
+            Additionally, 'jq' creates an overlay that flags elements of the current active window with typeable buttons.
+            The point is this can improve the actions per minute of most computer users.
+            Keyboard navigation is not only about efficiency, but also accessibility.
+            I explored AutoHotKey, however due to security concerns I elected to build my own project from open source options.
+            This also allows for complex hotkeys to made simpler too, for instance, 'alt' + 'tab', can be simply 'jg'.
+            I centered this script around 'j' because 'j' is on the homerow of the default qwerty keyboard, but is one
+            of the least frequently used letters in English.
+        </pre>
         <a sylte="color:#bcb9f0", id="wiki_letter_freq_link",href="https://en.wikipedia.org/wiki/Letter_frequency">Link to article on letter frequency</a>
         <p>Type 's' to return.</p>
     </div>
