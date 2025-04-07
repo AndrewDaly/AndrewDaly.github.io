@@ -5,81 +5,366 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Andrew Daly Website</title>
     <style>
-        body {
-            background-color:#000000;
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --accent-color: #00b4d8;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-color: #333333;
         }
-        .collapsible {
-            background-color: #777;
-            color: white;
-            cursor: pointer;
-            padding: 10px;
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #2a2a2a 100%);
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hero h1 {
+            color: var(--accent-color);
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 180, 216, 0.3);
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .skills-section {
+            padding: 40px 20px;
+            background-color: var(--bg-primary);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .skill-card {
+            background-color: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .skill-card h3 {
+            color: var(--accent-color);
+            margin-top: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
             width: 100%;
-            border: none;
+        }
+
+        h2 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px rgba(0, 180, 216, 0.3);
+        }
+
+        .collapsible {
+            background: linear-gradient(to right, var(--bg-secondary), #2a2a2a);
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 15px;
+            width: 100%;
+            border: 1px solid var(--border-color);
             text-align: left;
             outline: none;
-            font-size: 15px;
+            font-size: 16px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
+
+        .collapsible:hover {
+            background: linear-gradient(to right, #2a2a2a, #333333);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .collapsible:after {
+            content: '+';
+            position: absolute;
+            right: 15px;
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible.active:after {
+            transform: rotate(45deg);
+        }
+
         .content {
-            padding: 0 18px;
+            padding: 20px;
             display: none;
             overflow: hidden;
-            background-color: #999;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin: 5px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .content p, .content li {
+            color: var(--text-secondary);
+            margin: 10px 0;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #00d4f8;
+            text-decoration: underline;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        pre {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        #git_portfolio_link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.2em;
+            padding: 10px;
+            background-color: var(--bg-secondary);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        #git_portfolio_link:hover {
+            background-color: #2a2a2a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            background-color: var(--bg-secondary);
+            padding: 40px 20px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-section h3 {
+            color: var(--accent-color);
+            margin-top: 0;
+        }
+
+        .footer-section p, .footer-section a {
+            color: var(--text-secondary);
+            margin: 10px 0;
+        }
+
+        .resume-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .resume-link:hover {
+            background-color: #00d4f8;
+            transform: translateY(-2px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            color: var(--text-primary);
+            font-size: 1.5em;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
         }
     </style>
 </head>
 <body>
-
-    <br>
-    <h2 style="color:#FFFFFF">Andrew Daly Github Website</h2>
-    <br>
-    <button class="collapsible">Email Message Automation Project (Type 'a' to see more)</button>
-    <div class="content">
-        <p>This project exists as a way to send out daily emails</p>
-        <p>By leveraging Google's authentication token api's, you can connect to a free gmail account programmatically</p>
-        <p>This project can be leveraged to send out daily reports, alerts, and messages</p>
-        <br>
-        <a style="color:#0696ac" id="email_automation_git_link" href="https://github.com/AndrewDaly/email_automation">Link to Github Repo</a>
-        <br>
-        <br>
-        <a href="about.html">About</a>
+    <div class="hero">
+        <h1>Andrew Daly</h1>
+        <p>Software Developer & Automation Enthusiast</p>
+        <p>Passionate about creating efficient solutions and improving user experiences through technology</p>
     </div>
 
-    <button class="collapsible">StaticHands (Type 's' to see more)</button>
-    <div class="content">
-        <p>StaticHands is a project to improve user-computation interaction.</p>
+    <div class="skills-section">
+        <h2 style="text-align: center; margin-bottom: 30px;">Skills & Expertise</h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <h3>Web Development</h3>
+                <p>HTML, CSS, JavaScript</p>
+            </div>
+            <div class="skill-card">
+                <h3>Automation</h3>
+                <p>Email Automation, Scripting</p>
+            </div>
+            <div class="skill-card">
+                <h3>UI/UX</h3>
+                <p>User Interface Design, Accessibility</p>
+            </div>
+            <div class="skill-card">
+                <h3>Tools & Technologies</h3>
+                <p>Git, GitHub, Google APIs</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
         <br>
-        <pre>
-            In my opinion, most computer users are interacting with their physical machines in a suboptimal manner.
-            People can type on their keyboards far faster than they can use a mouse to point and click.
-            However, the majority of software relies primarily on slower mouse-based navigation.
-            When hotkeys exist, they are often essentially an after thought or are inconsistent.
-            But unavoidably, they rely on moving your hand off the homerow keys of the keyboard to press 'ctrl'.
-            Pressing obscure key chord centered on 'ctrl' or 'alt' is slow and unwieldy and inefficient.
-            All that hinders the use of such hotkeys, which are meant to save time in the first place.
-            I believe that there is a better way for people to interact with their machines.
-            Which is why I started this project, in order to improve my own efficiency and practice some coding skills.
-            Essentially, this project revamps the 'j' key to 'ctrl', and adds a ui based keyboard navigation mode.
-            Typing 'ja' is equal to 'ctrl' + 'a', 'jf' types the 'j' key, and typing 'j' alone does nothing.
-            Additionally, 'jq' creates an overlay that flags elements of the current active window with typeable buttons.
-            The point is this can improve the actions per minute of most computer users.
-            Keyboard navigation is not only about efficiency, but also accessibility.
-            I explored AutoHotKey, however due to security concerns I elected to build my own project from open source options.
-            This also allows for complex hotkeys to made simpler too, for instance, 'alt' + 'tab', can be simply 'jg'.
-            I centered this script around 'j' because 'j' is on the homerow of the default qwerty keyboard, but is one
-            of the least frequently used letters in English.
-        </pre>
-        <p>Type 's' to return.</p>
+        <h2 style="color:#FFFFFF">Andrew Daly Github Website</h2>
+        <br>
+        <button class="collapsible">Email Message Automation Project (Type 'a' to see more)</button>
+        <div class="content">
+            <p>This project exists as a way to send out daily emails</p>
+            <p>By leveraging Google's authentication token api's, you can connect to a free gmail account programmatically</p>
+            <p>This project can be leveraged to send out daily reports, alerts, and messages</p>
+            <br>
+            <a style="color:#0696ac" id="email_automation_git_link" href="https://github.com/AndrewDaly/email_automation">Link to Github Repo</a>
+            <br>
+            <br>
+            <a href="about.html">About</a>
+        </div>
+
+        <button class="collapsible">StaticHands (Type 's' to see more)</button>
+        <div class="content">
+            <p>StaticHands is a project to improve user-computation interaction.</p>
+            <br>
+            <pre>
+                In my opinion, most computer users are interacting with their physical machines in a suboptimal manner.
+                People can type on their keyboards far faster than they can use a mouse to point and click.
+                However, the majority of software relies primarily on slower mouse-based navigation.
+                When hotkeys exist, they are often essentially an after thought or are inconsistent.
+                But unavoidably, they rely on moving your hand off the homerow keys of the keyboard to press 'ctrl'.
+                Pressing obscure key chord centered on 'ctrl' or 'alt' is slow and unwieldy and inefficient.
+                All that hinders the use of such hotkeys, which are meant to save time in the first place.
+                I believe that there is a better way for people to interact with their machines.
+                Which is why I started this project, in order to improve my own efficiency and practice some coding skills.
+                Essentially, this project revamps the 'j' key to 'ctrl', and adds a ui based keyboard navigation mode.
+                Typing 'ja' is equal to 'ctrl' + 'a', 'jf' types the 'j' key, and typing 'j' alone does nothing.
+                Additionally, 'jq' creates an overlay that flags elements of the current active window with typeable buttons.
+                The point is this can improve the actions per minute of most computer users.
+                Keyboard navigation is not only about efficiency, but also accessibility.
+                I explored AutoHotKey, however due to security concerns I elected to build my own project from open source options.
+                This also allows for complex hotkeys to made simpler too, for instance, 'alt' + 'tab', can be simply 'jg'.
+                I centered this script around 'j' because 'j' is on the homerow of the default qwerty keyboard, but is one
+                of the least frequently used letters in English.
+            </pre>
+            <p>Type 's' to return.</p>
+        </div>
+
+        <button class="collapsible">Resume information(Type 'w' to see more)</button>
+        <div class="content">
+            <p>This is the collapsible content.</p>
+            <p>Type 'w' to return.</p>
+        </div>
+
+        <button class="collapsible">Technical Accomplishments (Type 't' to see more)</button>
+        <div class="content">
+            <p>Here are some of my key technical achievements:</p>
+            <ul>
+                <li>Developed an email automation system using Google's authentication APIs</li>
+                <li>Created StaticHands, a keyboard navigation enhancement tool for improved user efficiency</li>
+                <li>Built and maintained personal website with interactive features</li>
+                <li>Implemented responsive web design principles</li>
+                <li>Developed custom keyboard shortcuts and automation scripts</li>
+            </ul>
+            <p>Type 't' to return.</p>
+        </div>
+        <br>
+        <br>
+        <a style="color:#0374ff" id="git_portfolio_link" href="https://github.com/AndrewDaly/">Link to my GitHub Porfolio (Type 'q')</a>
     </div>
 
-    <button class="collapsible">Resume information(Type 'w' to see more)</button>
-    <div class="content">
-        <p>This is the collapsible content.</p>
-        <p>Type 'w' to return.</p>
-    </div>
-    <br>
-    <br>
-    <a style="color:#0374ff" id="git_portfolio_link" href="https://github.com/AndrewDaly/">Link to my GitHub Porfolio (Type 'q')</a>
-
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: your.email@example.com</p>
+                <p>Location: Your Location</p>
+                <a href="resume.pdf" class="resume-link">Download Resume</a>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <div class="social-links">
+                    <a href="https://github.com/AndrewDaly" target="_blank">GitHub</a>
+                    <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>About This Site</h3>
+                <p>Built with HTML, CSS, and JavaScript</p>
+                <p>Last updated: 2024</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -103,7 +388,9 @@
                     content[2].style.display = content[2].style.display === "block" ? "none" : "block";
                     console.log('Toggling content[2]');
                     console.log(event.key);
-
+                }
+                if (event.key === 't') {
+                    content[3].style.display = content[3].style.display === "block" ? "none" : "block";
                 }
                 if (event.key === 'q') {
                     window.open('https://github.com/AndrewDaly/', '_blank');
