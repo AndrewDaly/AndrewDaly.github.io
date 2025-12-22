@@ -1,0 +1,92 @@
+# Andrew Daly's Portfolio Website - Cursor Rules
+
+## Project Overview
+This is a personal portfolio website hosted on GitHub Pages showcasing projects, skills, and technical accomplishments.
+
+## Tech Stack
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript
+- **Hosting**: GitHub Pages (static site)
+- **Python Projects**: Chess automation tools using Stockfish engine
+- **Version Control**: Git/GitHub
+
+## Project Structure
+- `index.html` - Main portfolio page with collapsible sections
+- `about.html` - About page
+- `README.md` - Repository documentation
+- `chess_auto_player/` - Chess automation project with Python scripts
+- `.gitignore` - Git ignore rules (excludes Python cache, IDE files, OS files, executables)
+
+## Coding Guidelines
+
+### HTML/CSS
+- Use semantic HTML5 elements
+- Maintain consistent indentation (4 spaces)
+- Use CSS custom properties (CSS variables) for theming
+- Follow mobile-first responsive design principles
+- Keep accessibility in mind (ARIA labels, semantic markup)
+
+### JavaScript
+- Use modern ES6+ syntax
+- Keep event listeners organized in DOMContentLoaded
+- Use meaningful variable and function names
+- Add comments for complex logic
+
+### Python
+- Follow PEP 8 style guidelines
+- Use virtual environments for dependencies
+- Keep requirements.txt updated with specific versions
+- Document functions and modules
+
+## Design Principles
+- **Dark Theme**: Primary color scheme uses dark backgrounds (#121212, #1e1e1e)
+- **Accent Color**: Cyan/blue (#00b4d8) for highlights and links
+- **Modern UI**: Smooth transitions, hover effects, gradient backgrounds
+- **Keyboard Navigation**: Site includes custom keyboard shortcuts for navigation
+
+## Git Workflow
+- Write clear, descriptive commit messages
+- Use present tense ("Add feature" not "Added feature")
+- Commit related changes together
+- Don't commit large binary files (>50MB) - use .gitignore
+- Always pull before pushing to avoid conflicts
+
+## Important Notes
+- This is a **public repository** - no sensitive information
+- Site is deployed automatically via GitHub Pages
+- Changes to `main` branch go live immediately
+- Large executables (*.exe) are gitignored as of latest update
+- Keyboard shortcuts are implemented: 'a', 's', 'w', 't', 'q' for navigation
+
+## Project-Specific Features
+- **Collapsible Sections**: Interactive project descriptions
+- **Keyboard Controls**: Custom shortcuts for power users
+- **StaticHands Project**: Keyboard navigation enhancement tool
+- **Email Automation**: Google API integration for automated emails
+
+## When Making Changes
+1. Test locally before committing
+2. Ensure responsive design works on mobile
+3. Maintain the existing dark theme aesthetic
+4. Keep keyboard navigation functional
+5. Update README.md if adding new features
+6. Don't break existing keyboard shortcuts (a, s, w, t, q)
+
+## Performance Considerations
+- Minimize external dependencies
+- Optimize images before adding
+- Keep JavaScript minimal and efficient
+- Avoid heavy frameworks for this simple site
+
+## Accessibility
+- Maintain proper heading hierarchy
+- Ensure sufficient color contrast
+- Test keyboard navigation
+- Use descriptive link text
+- Add alt text to images
+
+## Future Enhancements
+- Consider adding more project showcases
+- Potential blog section
+- Dark/light theme toggle
+- Enhanced animations
+- More interactive demos

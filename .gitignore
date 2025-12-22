@@ -69,3 +69,5 @@ tmp/
 *.zip
 *.tar.gz
 *.rar
+
+*.exe
