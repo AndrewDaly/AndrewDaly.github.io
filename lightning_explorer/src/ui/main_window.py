@@ -149,6 +149,32 @@ class LightningExplorer(tk.Tk):
         # Create context menu
         self.create_context_menu()
         
+        # Typing buffer display (shows last 4 keystrokes)
+        self.typing_frame = tk.Frame(self, bg='#3a3a00', height=60)
+        self.typing_frame.pack(fill=tk.X, padx=5, pady=(0, 5))
+        self.typing_frame.pack_propagate(False)
+        
+        tk.Label(
+            self.typing_frame,
+            text="Typing:",
+            bg='#3a3a00',
+            fg='#ffff00',
+            font=('Segoe UI', 10, 'bold'),
+            anchor='w',
+            padx=5
+        ).pack(side=tk.LEFT)
+        
+        self.typing_display = tk.Label(
+            self.typing_frame,
+            text="",
+            bg='#3a3a00',
+            fg='#ffff00',
+            font=('Consolas', 32, 'bold'),
+            anchor='center',
+            padx=20
+        )
+        self.typing_display.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        
         # Legend/Help bar
         self.legend_frame = tk.Frame(self, bg='#2a2a2a', height=40)
         self.legend_frame.pack(fill=tk.X, padx=5, pady=(0, 5))
@@ -296,8 +322,12 @@ class LightningExplorer(tk.Tk):
         key = event.char.lower()
         self.hint_buffer += key
         
-        # Update hint display
+        # Update hint display (traditional small display)
         self.hint_label.config(text=f"Hint: {self.hint_buffer}")
+        
+        # Update typing buffer display (shows last 4 chars in big font)
+        display_text = self.hint_buffer[-4:] if len(self.hint_buffer) > 4 else self.hint_buffer
+        self.typing_display.config(text=display_text)
         
         # Check if this is a context menu mode (starts with 'r')
         if self.hint_buffer.startswith('r') and len(self.hint_buffer) == 3:
@@ -359,6 +389,7 @@ class LightningExplorer(tk.Tk):
         """Clear the hint buffer"""
         self.hint_buffer = ""
         self.hint_label.config(text="")
+        self.typing_display.config(text="")
         return "break"
     
     def navigate_up(self):
@@ -555,7 +586,7 @@ TIP: Everything is keyboard accessible!
         # Instructions
         inst_label = tk.Label(
             overlay,
-            text="Type a letter to select, ESC to cancel",
+            text="Type a letter to select, [w] or ESC to cancel",
             bg='#1e1e1e',
             fg='#00b4d8',
             font=('Segoe UI', 10),
@@ -566,6 +597,14 @@ TIP: Everything is keyboard accessible!
         # Key bindings
         def handle_key(event):
             key = event.char.lower()
+            
+            # Check for cancel key 'w'
+            if key == 'w':
+                overlay.destroy()
+                self.right_clicked_file = None
+                return
+            
+            # Check for action keys
             for text, opt_key, command in options:
                 if key == opt_key:
                     overlay.destroy()
