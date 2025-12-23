@@ -74,7 +74,7 @@ class LightningExplorer(tk.Tk):
             text="",
             bg='#1e1e1e',
             fg='#00b4d8',
-            font=('Consolas', 11, 'bold'),
+            font=('Consolas', 14, 'bold'),
             anchor='w',
             padx=10
         )
@@ -90,7 +90,7 @@ class LightningExplorer(tk.Tk):
             text="Search:",
             bg='#1e1e1e',
             fg='#b3b3b3',
-            font=('Segoe UI', 10),
+            font=('Segoe UI', 12),
             padx=10
         )
         self.search_label.pack(side=tk.LEFT)
@@ -100,7 +100,7 @@ class LightningExplorer(tk.Tk):
             bg='#2a2a2a',
             fg='#ffffff',
             insertbackground='#00b4d8',
-            font=('Consolas', 10),
+            font=('Consolas', 12),
             relief=tk.FLAT,
             bd=0
         )
@@ -117,26 +117,47 @@ class LightningExplorer(tk.Tk):
         self.scrollbar = tk.Scrollbar(self.list_frame, bg='#1e1e1e', troughcolor='#121212')
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
-        # File listbox
-        self.file_listbox = tk.Listbox(
+        # File list (using Text widget for colored hints)
+        self.file_listbox = tk.Text(
             self.list_frame,
             bg='#1e1e1e',
             fg='#ffffff',
-            selectmode=tk.SINGLE,
-            font=('Consolas', 10),
+            font=('Consolas', 13),
             relief=tk.FLAT,
             bd=0,
             highlightthickness=1,
             highlightbackground='#333333',
-            selectbackground='#00b4d8',
-            selectforeground='#000000',
-            yscrollcommand=self.scrollbar.set
+            yscrollcommand=self.scrollbar.set,
+            wrap=tk.NONE,
+            cursor='arrow',
+            state=tk.DISABLED  # Make read-only initially
         )
         self.file_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.config(command=self.file_listbox.yview)
         
+        # Configure tags for colored hints
+        self.file_listbox.tag_configure('hint', foreground='#ffff00', background='#3a3a00', font=('Consolas', 13, 'bold'))
+        self.file_listbox.tag_configure('folder', foreground='#ffffff')
+        self.file_listbox.tag_configure('file', foreground='#b3b3b3')
+        
+        # Legend/Help bar
+        self.legend_frame = tk.Frame(self, bg='#2a2a2a', height=40)
+        self.legend_frame.pack(fill=tk.X, padx=5, pady=(0, 5))
+        self.legend_frame.pack_propagate(False)
+        
+        self.legend_label = tk.Label(
+            self.legend_frame,
+            text="  [ab] - Type hint to open  |  SHIFT-H - Back  |  SHIFT-D - Page Down  |  SHIFT-U - Page Up  |  / - Search  |  ? - Help  ",
+            bg='#2a2a2a',
+            fg='#00b4d8',
+            font=('Segoe UI', 11, 'bold'),
+            anchor='center',
+            padx=10
+        )
+        self.legend_label.pack(fill=tk.BOTH, expand=True)
+        
         # Status bar
-        self.status_frame = tk.Frame(self, bg='#1e1e1e', height=30)
+        self.status_frame = tk.Frame(self, bg='#1e1e1e', height=35)
         self.status_frame.pack(fill=tk.X, padx=5, pady=(0, 5))
         self.status_frame.pack_propagate(False)
         
@@ -145,7 +166,7 @@ class LightningExplorer(tk.Tk):
             text="",
             bg='#1e1e1e',
             fg='#b3b3b3',
-            font=('Segoe UI', 9),
+            font=('Segoe UI', 11),
             anchor='w',
             padx=10
         )
@@ -157,22 +178,11 @@ class LightningExplorer(tk.Tk):
             text="",
             bg='#1e1e1e',
             fg='#00ff00',
-            font=('Consolas', 10, 'bold'),
+            font=('Consolas', 12, 'bold'),
             anchor='e',
             padx=10
         )
         self.hint_label.pack(side=tk.RIGHT, padx=(10, 0))
-        
-        self.help_label = tk.Label(
-            self.status_frame,
-            text="? - Help | / - Search | Backspace - Up",
-            bg='#1e1e1e',
-            fg='#00b4d8',
-            font=('Segoe UI', 9),
-            anchor='e',
-            padx=10
-        )
-        self.help_label.pack(side=tk.RIGHT)
     
     def bind_keys(self):
         """Bind keyboard shortcuts"""
@@ -184,6 +194,11 @@ class LightningExplorer(tk.Tk):
         # Navigation
         self.file_listbox.bind('<BackSpace>', lambda e: self.navigate_up())
         self.file_listbox.bind('<Escape>', self.clear_hint_buffer)
+        
+        # SHIFT navigation commands
+        self.file_listbox.bind('<H>', lambda e: self.navigate_up())  # SHIFT-H
+        self.file_listbox.bind('<D>', self.page_down)  # SHIFT-D
+        self.file_listbox.bind('<U>', self.page_up)    # SHIFT-U
         
         # Search
         self.file_listbox.bind('<slash>', self.enter_search_mode)
@@ -207,7 +222,8 @@ class LightningExplorer(tk.Tk):
         self.path_label.config(text=str(self.scanner.current_path))
         
         # Clear listbox and hint mapping
-        self.file_listbox.delete(0, tk.END)
+        self.file_listbox.config(state=tk.NORMAL)
+        self.file_listbox.delete('1.0', tk.END)
         self.file_hints.clear()
         
         # Generate hint labels for files
@@ -217,7 +233,9 @@ class LightningExplorer(tk.Tk):
         # Add parent directory entry if not at root
         if self.scanner.current_path.parent != self.scanner.current_path:
             hint = hints[hint_index]
-            self.file_listbox.insert(tk.END, f"[{hint}] 📁 ..")
+            # Insert with colored hint
+            self.file_listbox.insert(tk.END, f"[{hint}]", 'hint')
+            self.file_listbox.insert(tk.END, f" 📁 ..\n", 'folder')
             self.file_hints[hint] = None  # None means parent directory
             hint_index += 1
         
@@ -225,10 +243,16 @@ class LightningExplorer(tk.Tk):
         for file in self.filtered_files:
             hint = hints[hint_index]
             icon = "📁" if file.is_dir else "📄"
-            display_text = f"[{hint}] {icon} {file.name:<45} {file.size_str:>10}"
-            self.file_listbox.insert(tk.END, display_text)
+            tag = 'folder' if file.is_dir else 'file'
+            
+            # Insert with colored hint
+            self.file_listbox.insert(tk.END, f"[{hint}]", 'hint')
+            self.file_listbox.insert(tk.END, f" {icon} {file.name:<45} {file.size_str:>10}\n", tag)
             self.file_hints[hint] = file
             hint_index += 1
+        
+        # Make read-only
+        self.file_listbox.config(state=tk.DISABLED)
         
         # Update status
         file_count = len(self.filtered_files)
@@ -304,6 +328,34 @@ class LightningExplorer(tk.Tk):
             self.refresh_files()
         return "break"
     
+    def page_down(self, event=None):
+        """Scroll down one page"""
+        # Scroll down approximately one page
+        try:
+            # Get visible height in lines
+            visible_height = int(self.file_listbox.winfo_height() / self.file_listbox.tk.call('font', 'metrics', self.file_listbox.cget('font'), '-linespace'))
+            lines_to_scroll = max(1, visible_height - 2)  # Leave some overlap
+            self.file_listbox.yview_scroll(lines_to_scroll, 'units')
+        except:
+            # Fallback: scroll by fixed amount
+            self.file_listbox.yview_scroll(10, 'units')
+        
+        return "break"
+    
+    def page_up(self, event=None):
+        """Scroll up one page"""
+        # Scroll up approximately one page
+        try:
+            # Get visible height in lines
+            visible_height = int(self.file_listbox.winfo_height() / self.file_listbox.tk.call('font', 'metrics', self.file_listbox.cget('font'), '-linespace'))
+            lines_to_scroll = max(1, visible_height - 2)  # Leave some overlap
+            self.file_listbox.yview_scroll(-lines_to_scroll, 'units')
+        except:
+            # Fallback: scroll by fixed amount
+            self.file_listbox.yview_scroll(-10, 'units')
+        
+        return "break"
+    
     def enter_search_mode(self, event=None):
         """Enter search mode"""
         self.search_mode = True
@@ -340,9 +392,11 @@ HINT-BASED NAVIGATION:
     - No arrow keys needed!
   
 NAVIGATION:
-  Backspace  - Go to parent directory
-  Esc        - Clear current hint input
-  [aa],[ab]  - Type any hint to activate file/folder
+  SHIFT-H or Backspace - Go to parent directory
+  SHIFT-D              - Page down (scroll down)
+  SHIFT-U              - Page up (scroll up)
+  Esc                  - Clear current hint input
+  [aa],[ab]            - Type any hint to activate file/folder
   
 SEARCH:
   /          - Enter search mode
@@ -354,7 +408,7 @@ OTHER:
   ?          - Show this help
 
 TIP: Direct access to any file with just 2 keystrokes!
-     Much faster than repeated arrow key presses.
+     Use SHIFT-D/U to quickly scan through long lists.
         """
         messagebox.showinfo("Lightning Explorer Help", help_text)
         return "break"
