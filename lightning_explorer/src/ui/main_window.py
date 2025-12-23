@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 import itertools
 import string
+import shutil
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -43,6 +44,11 @@ class LightningExplorer(tk.Tk):
         self.search_mode = False
         self.search_query = ""
         self.hint_buffer = ""  # Typed hint characters
+        
+        # Clipboard state for copy/cut/paste
+        self.clipboard_file = None
+        self.clipboard_operation = None  # 'copy' or 'cut'
+        self.right_clicked_file = None  # Track which file was right-clicked
         
         # Setup UI
         self.title("Lightning Explorer")
@@ -140,6 +146,9 @@ class LightningExplorer(tk.Tk):
         self.file_listbox.tag_configure('folder', foreground='#ffffff')
         self.file_listbox.tag_configure('file', foreground='#b3b3b3')
         
+        # Create context menu
+        self.create_context_menu()
+        
         # Legend/Help bar
         self.legend_frame = tk.Frame(self, bg='#2a2a2a', height=40)
         self.legend_frame.pack(fill=tk.X, padx=5, pady=(0, 5))
@@ -147,7 +156,7 @@ class LightningExplorer(tk.Tk):
         
         self.legend_label = tk.Label(
             self.legend_frame,
-            text="  [ab] - Type hint to open  |  SHIFT-H - Back  |  SHIFT-D - Page Down  |  SHIFT-U - Page Up  |  / - Search  |  ? - Help  ",
+            text="  [ab] - Open  |  r[ab] - Actions  |  SHIFT-H - Back  |  SHIFT-D - Page Down  |  SHIFT-U - Page Up  |  / - Search  |  ? - Help  ",
             bg='#2a2a2a',
             fg='#00b4d8',
             font=('Segoe UI', 11, 'bold'),
@@ -183,6 +192,21 @@ class LightningExplorer(tk.Tk):
             padx=10
         )
         self.hint_label.pack(side=tk.RIGHT, padx=(10, 0))
+    
+    def create_context_menu(self):
+        """Create right-click context menu"""
+        self.context_menu = tk.Menu(self, tearoff=0, bg='#2a2a2a', fg='#ffffff', 
+                                     activebackground='#00b4d8', activeforeground='#000000')
+        self.context_menu.add_command(label="Open", command=self.context_open)
+        self.context_menu.add_separator()
+        self.context_menu.add_command(label="Copy", command=self.context_copy)
+        self.context_menu.add_command(label="Cut", command=self.context_cut)
+        self.context_menu.add_command(label="Paste", command=self.context_paste)
+        self.context_menu.add_separator()
+        self.context_menu.add_command(label="Copy Full Path", command=self.context_copy_path)
+        
+        # Bind right-click to file list
+        self.file_listbox.bind('<Button-3>', self.show_context_menu)
     
     def bind_keys(self):
         """Bind keyboard shortcuts"""
@@ -275,15 +299,30 @@ class LightningExplorer(tk.Tk):
         # Update hint display
         self.hint_label.config(text=f"Hint: {self.hint_buffer}")
         
-        # Check for matches
-        matching_hints = [h for h in self.file_hints.keys() if h.startswith(self.hint_buffer)]
+        # Check if this is a context menu mode (starts with 'r')
+        if self.hint_buffer.startswith('r') and len(self.hint_buffer) == 3:
+            # User typed 'r' + hint (e.g., 'rab') -> open context menu
+            hint = self.hint_buffer[1:]  # Extract the hint part (remove 'r')
+            if hint in self.file_hints:
+                self.right_clicked_file = self.file_hints[hint]
+                self.clear_hint_buffer()
+                self.show_keyboard_context_menu()
+                return "break"
+            else:
+                # Invalid hint, reset
+                self.clear_hint_buffer()
+                return "break"
         
-        if len(matching_hints) == 1 and matching_hints[0] == self.hint_buffer:
-            # Exact match - activate the file
-            self.activate_hint(matching_hints[0])
-        elif len(matching_hints) == 0:
-            # No matches - reset
-            self.clear_hint_buffer()
+        # Check for matches (only if not in 'r' mode)
+        if not self.hint_buffer.startswith('r'):
+            matching_hints = [h for h in self.file_hints.keys() if h.startswith(self.hint_buffer)]
+            
+            if len(matching_hints) == 1 and matching_hints[0] == self.hint_buffer:
+                # Exact match - activate the file
+                self.activate_hint(matching_hints[0])
+            elif len(matching_hints) == 0:
+                # No matches - reset
+                self.clear_hint_buffer()
         
         return "break"
     
@@ -384,19 +423,22 @@ Lightning Explorer - Vimium-Style Navigation
 
 HINT-BASED NAVIGATION:
   Each file has a 2-letter hint like [aa], [ab], [kl]
-  Just type the hint to open/navigate to that file!
   
-  Example:
-    - See [fj] next to a folder?
-    - Type 'f' then 'j' → Opens that folder
-    - No arrow keys needed!
+  Type hint to open:
+    - Type 'ab' → Opens/navigates to that file
+  
+  Type 'r' + hint for actions menu:
+    - Type 'rab' → Opens keyboard menu with options:
+      [o] Open    [c] Copy    [x] Cut
+      [v] Paste   [p] Copy Full Path
   
 NAVIGATION:
   SHIFT-H or Backspace - Go to parent directory
   SHIFT-D              - Page down (scroll down)
   SHIFT-U              - Page up (scroll up)
   Esc                  - Clear current hint input
-  [aa],[ab]            - Type any hint to activate file/folder
+  [aa],[ab]            - Type hint to open file/folder
+  r[aa],r[ab]          - Type 'r' + hint for actions
   
 SEARCH:
   /          - Enter search mode
@@ -406,12 +448,228 @@ SEARCH:
 OTHER:
   F5         - Refresh current directory
   ?          - Show this help
+  Right-click - Mouse context menu (if you prefer)
 
-TIP: Direct access to any file with just 2 keystrokes!
-     Use SHIFT-D/U to quickly scan through long lists.
+TIP: Everything is keyboard accessible!
+     Type hint → opens file
+     Type 'r' then hint → actions menu
+     No mouse needed!
         """
         messagebox.showinfo("Lightning Explorer Help", help_text)
         return "break"
+    
+    def show_context_menu(self, event):
+        """Show context menu on right-click"""
+        # Get the line number clicked
+        line_index = self.file_listbox.index(f"@{event.x},{event.y}")
+        line_num = int(float(line_index))
+        
+        # Map line number to file
+        has_parent = self.scanner.current_path.parent != self.scanner.current_path
+        file_index = line_num - 1
+        if has_parent:
+            file_index -= 1
+        
+        # Set the right-clicked file
+        if file_index == -1 and has_parent:
+            self.right_clicked_file = None  # Clicked on ".."
+        elif 0 <= file_index < len(self.filtered_files):
+            self.right_clicked_file = self.filtered_files[file_index]
+        else:
+            self.right_clicked_file = None
+        
+        # Update paste menu state
+        if self.clipboard_file:
+            self.context_menu.entryconfig("Paste", state=tk.NORMAL)
+        else:
+            self.context_menu.entryconfig("Paste", state=tk.DISABLED)
+        
+        # Show menu
+        try:
+            self.context_menu.tk_popup(event.x_root, event.y_root)
+        finally:
+            self.context_menu.grab_release()
+    
+    def show_keyboard_context_menu(self):
+        """Show keyboard-accessible context menu overlay"""
+        if not self.right_clicked_file:
+            return
+        
+        # Create overlay window
+        overlay = tk.Toplevel(self)
+        overlay.title(f"Actions: {self.right_clicked_file.name}")
+        overlay.geometry("400x250")
+        overlay.configure(bg='#1e1e1e')
+        overlay.transient(self)
+        overlay.grab_set()
+        
+        # Center on parent
+        overlay.update_idletasks()
+        x = self.winfo_x() + (self.winfo_width() - overlay.winfo_width()) // 2
+        y = self.winfo_y() + (self.winfo_height() - overlay.winfo_height()) // 2
+        overlay.geometry(f"+{x}+{y}")
+        
+        # Title
+        title_label = tk.Label(
+            overlay,
+            text=f"File: {self.right_clicked_file.name}",
+            bg='#1e1e1e',
+            fg='#00b4d8',
+            font=('Consolas', 12, 'bold'),
+            pady=10
+        )
+        title_label.pack()
+        
+        # Options frame
+        options_frame = tk.Frame(overlay, bg='#1e1e1e')
+        options_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
+        
+        # Define options with hints
+        options = [
+            ('[o] Open', 'o', self.context_open),
+            ('[c] Copy', 'c', self.context_copy),
+            ('[x] Cut', 'x', self.context_cut),
+            ('[p] Copy Full Path', 'p', self.context_copy_path),
+        ]
+        
+        # Add paste if clipboard has content
+        if self.clipboard_file:
+            options.append(('[v] Paste', 'v', self.context_paste))
+        
+        # Create option labels
+        for text, key, command in options:
+            label = tk.Label(
+                options_frame,
+                text=text,
+                bg='#1e1e1e',
+                fg='#ffffff',
+                font=('Consolas', 14),
+                anchor='w',
+                pady=5
+            )
+            label.pack(fill=tk.X)
+            
+            # Highlight the hint
+            label.config(fg='#b3b3b3')
+        
+        # Instructions
+        inst_label = tk.Label(
+            overlay,
+            text="Type a letter to select, ESC to cancel",
+            bg='#1e1e1e',
+            fg='#00b4d8',
+            font=('Segoe UI', 10),
+            pady=10
+        )
+        inst_label.pack()
+        
+        # Key bindings
+        def handle_key(event):
+            key = event.char.lower()
+            for text, opt_key, command in options:
+                if key == opt_key:
+                    overlay.destroy()
+                    command()
+                    self.right_clicked_file = None
+                    return
+        
+        def handle_escape(event):
+            overlay.destroy()
+            self.right_clicked_file = None
+        
+        overlay.bind('<Key>', handle_key)
+        overlay.bind('<Escape>', handle_escape)
+        overlay.focus_set()
+    
+    def context_open(self):
+        """Open the right-clicked file/folder"""
+        if not self.right_clicked_file:
+            return
+        
+        if self.right_clicked_file.is_dir:
+            self.scanner.navigate_to(self.right_clicked_file)
+            self.refresh_files()
+        else:
+            try:
+                if sys.platform == 'win32':
+                    os.startfile(self.right_clicked_file.path)
+                else:
+                    subprocess.call(['xdg-open', str(self.right_clicked_file.path)])
+            except Exception as e:
+                messagebox.showerror("Error", f"Could not open file:\n{e}")
+    
+    def context_copy(self):
+        """Copy file to clipboard"""
+        if not self.right_clicked_file:
+            return
+        
+        self.clipboard_file = self.right_clicked_file
+        self.clipboard_operation = 'copy'
+        self.status_label.config(text=f"Copied: {self.right_clicked_file.name}")
+        self.after(2000, lambda: self.update_display())
+    
+    def context_cut(self):
+        """Cut file to clipboard"""
+        if not self.right_clicked_file:
+            return
+        
+        self.clipboard_file = self.right_clicked_file
+        self.clipboard_operation = 'cut'
+        self.status_label.config(text=f"Cut: {self.right_clicked_file.name}")
+        self.after(2000, lambda: self.update_display())
+    
+    def context_paste(self):
+        """Paste file from clipboard"""
+        if not self.clipboard_file:
+            return
+        
+        source_path = self.clipboard_file.path
+        dest_dir = self.scanner.current_path
+        dest_path = dest_dir / self.clipboard_file.name
+        
+        try:
+            # Check if destination already exists
+            if dest_path.exists():
+                # Ask for confirmation to overwrite
+                response = messagebox.askyesno(
+                    "File Exists",
+                    f"{dest_path.name} already exists.\nOverwrite?"
+                )
+                if not response:
+                    return
+            
+            # Perform copy or move
+            if self.clipboard_operation == 'copy':
+                if source_path.is_dir():
+                    shutil.copytree(source_path, dest_path, dirs_exist_ok=True)
+                else:
+                    shutil.copy2(source_path, dest_path)
+                self.status_label.config(text=f"Copied: {self.clipboard_file.name}")
+            elif self.clipboard_operation == 'cut':
+                shutil.move(str(source_path), str(dest_path))
+                self.status_label.config(text=f"Moved: {self.clipboard_file.name}")
+                self.clipboard_file = None  # Clear clipboard after cut
+                self.clipboard_operation = None
+            
+            # Refresh the display
+            self.refresh_files()
+            
+        except Exception as e:
+            messagebox.showerror("Error", f"Could not paste file:\n{e}")
+    
+    def context_copy_path(self):
+        """Copy full file path to clipboard"""
+        if not self.right_clicked_file:
+            return
+        
+        try:
+            # Copy to system clipboard
+            self.clipboard_clear()
+            self.clipboard_append(str(self.right_clicked_file.path))
+            self.status_label.config(text=f"Path copied: {self.right_clicked_file.path}")
+            self.after(2000, lambda: self.update_display())
+        except Exception as e:
+            messagebox.showerror("Error", f"Could not copy path:\n{e}")
 
 
 def main():
