@@ -1,0 +1,10 @@
+# Lightning Explorer Requirements
+# Python 3.11+ required
+
+# No external dependencies for MVP!
+# tkinter is built-in to Python
+
+# Optional future dependencies:
+# keyboard==0.13.5     # For global hotkeys
+# watchdog==3.0.0      # For file system monitoring
+# pyperclip==1.8.2     # Enhanced clipboard support
