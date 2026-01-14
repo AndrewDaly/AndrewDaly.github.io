@@ -182,7 +182,7 @@ class LightningExplorer(tk.Tk):
         
         self.legend_label = tk.Label(
             self.legend_frame,
-            text="  [ab] - Open  |  r[ab] - Actions  |  SHIFT-H - Back  |  SHIFT-D - Page Down  |  SHIFT-U - Page Up  |  / - Search  |  ? - Help  ",
+            text="  [ab] - Open  |  r[ab] - Actions  |  SHIFT-H - Back  |  SHIFT-D - Page Down  |  SHIFT-U - Page Up  |  SHIFT-O - Explorer  |  / - Search  |  ? - Help  ",
             bg='#2a2a2a',
             fg='#00b4d8',
             font=('Segoe UI', 11, 'bold'),
@@ -249,6 +249,7 @@ class LightningExplorer(tk.Tk):
         self.file_listbox.bind('<H>', lambda e: self.navigate_up())  # SHIFT-H
         self.file_listbox.bind('<D>', self.page_down)  # SHIFT-D
         self.file_listbox.bind('<U>', self.page_up)    # SHIFT-U
+        self.file_listbox.bind('<O>', self.reveal_current_dir_in_explorer)  # SHIFT-O
         
         # Search
         self.file_listbox.bind('<slash>', self.enter_search_mode)
@@ -445,6 +446,22 @@ class LightningExplorer(tk.Tk):
         self.filtered_files = self.scanner.search(self.search_query)
         self.clear_hint_buffer()  # Clear hints when search changes
         self.update_display()
+
+    def reveal_current_dir_in_explorer(self, event=None):
+        """Open the current directory in the OS file explorer"""
+        try:
+            current_dir = self.scanner.current_path
+            if sys.platform == 'win32':
+                os.startfile(current_dir)
+            elif sys.platform == 'darwin':
+                subprocess.call(['open', str(current_dir)])
+            else:
+                subprocess.call(['xdg-open', str(current_dir)])
+            self.status_label.config(text=f"Revealed in Explorer: {current_dir}")
+            self.after(2000, lambda: self.update_display())
+        except Exception as e:
+            messagebox.showerror("Error", f"Could not open file explorer:\n{e}")
+        return "break"
     
     
     def show_help(self, event=None):
@@ -467,6 +484,7 @@ NAVIGATION:
   SHIFT-H or Backspace - Go to parent directory
   SHIFT-D              - Page down (scroll down)
   SHIFT-U              - Page up (scroll up)
+  SHIFT-O              - Reveal current directory in File Explorer
   Esc                  - Clear current hint input
   [aa],[ab]            - Type hint to open file/folder
   r[aa],r[ab]          - Type 'r' + hint for actions
