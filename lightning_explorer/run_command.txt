@@ -1,0 +1,1 @@
+ & c:/Dev/virtual_envs/venv/Scripts/python.exe c:/Dev/cursor_ai/AndrewDaly.github.io/lightning_explorer/src/main.py
