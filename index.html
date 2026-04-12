@@ -3,400 +3,712 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Andrew Daly Website</title>
+    <meta name="description" content="Andrew Daly — software developer focused on automation, keyboard-first tooling, Python systems, and pragmatic developer experience.">
+    <meta name="theme-color" content="#0d1117">
+    <title>Andrew Daly · Developer & automation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #121212;
-            --bg-secondary: #1e1e1e;
-            --accent-color: #00b4d8;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --border-color: #333333;
+            --bg-deep: #0d1117;
+            --bg-primary: #12141a;
+            --bg-secondary: #161b22;
+            --bg-elevated: #1c222d;
+            --accent: #3fb8d8;
+            --accent-soft: rgba(63, 184, 216, 0.15);
+            --accent-glow: rgba(63, 184, 216, 0.35);
+            --text-primary: #f0f3f6;
+            --text-secondary: #9da7b3;
+            --border: #30363d;
+            --radius: 10px;
+            --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+            --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+            --max: 1120px;
         }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
             margin: 0;
-            padding: 0;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.65;
+            font-size: 1rem;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        a:hover { text-decoration: underline; }
+
+        a:focus-visible,
+        button:focus-visible,
+        summary:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        .skip-link {
+            position: absolute;
+            left: -999px;
+            top: 0;
+            padding: 0.75rem 1rem;
+            background: var(--accent);
+            color: var(--bg-deep);
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .skip-link:focus { left: 0; }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+            background: rgba(13, 17, 23, 0.85);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-inner {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 0.65rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .brand span { color: var(--accent); }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem 1rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.25rem 0;
+        }
+
+        nav a:hover { color: var(--text-primary); text-decoration: none; }
+
         .hero {
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, #2a2a2a 100%);
-            padding: 60px 20px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+            background:
+                radial-gradient(ellipse 80% 60% at 50% -20%, var(--accent-soft), transparent),
+                linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-deep) 100%);
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 48px 48px;
+            opacity: 0.12;
+            mask-image: linear-gradient(to bottom, black 30%, transparent);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            position: relative;
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 3.5rem 1.25rem 3rem;
+        }
+
+        .hero-kicker {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
         }
 
         .hero h1 {
-            color: var(--accent-color);
-            font-size: 3em;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(0, 180, 216, 0.3);
+            font-size: clamp(2rem, 5vw, 2.85rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin: 0 0 1rem;
         }
 
-        .hero p {
+        .hero-lead {
+            font-size: 1.125rem;
             color: var(--text-secondary);
-            font-size: 1.2em;
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 38rem;
+            margin: 0 0 1.5rem;
         }
 
-        .skills-section {
-            padding: 40px 20px;
-            background-color: var(--bg-primary);
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.1rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn:hover { border-color: var(--accent); background: var(--bg-secondary); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2a8fa8 0%, var(--accent) 100%);
+            border-color: transparent;
+            color: #061016;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.08);
+            text-decoration: none;
+        }
+
+        main { max-width: var(--max); margin: 0 auto; padding: 2.5rem 1.25rem 3rem; }
+
+        section { margin-bottom: 3.5rem; }
+
+        section:last-of-type { margin-bottom: 0; }
+
+        .section-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-head h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .section-head p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            max-width: 28rem;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+        }
+
+        .projects {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+        }
+
+        .project-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.15rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .project-card:hover {
+            border-color: #484f58;
+            box-shadow: 0 0 0 1px var(--accent-glow);
+        }
+
+        .project-card.hot-flash {
+            border-color: var(--accent);
+            box-shadow: 0 0 24px var(--accent-glow);
+        }
+
+        .project-card h3 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .project-meta {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        .project-card > p {
+            margin: 0;
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .project-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem 1rem;
+            margin-top: 0.25rem;
+        }
+
+        .project-links a { font-size: 0.88rem; font-weight: 500; }
+
+        details.project-expand {
+            margin-top: 0.5rem;
+            border-top: 1px solid var(--border);
+            padding-top: 0.5rem;
+        }
+
+        details.project-expand summary {
+            cursor: pointer;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            list-style: none;
+        }
+
+        details.project-expand summary::-webkit-details-marker { display: none; }
+
+        details.project-expand[open] summary { margin-bottom: 0.5rem; color: var(--accent); }
+
+        details.project-expand .long {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        details.project-expand pre {
+            margin: 0.5rem 0 0;
+            padding: 0.85rem;
+            background: var(--bg-deep);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
         }
 
         .skills-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            gap: 1rem;
         }
 
         .skill-card {
-            background-color: var(--bg-secondary);
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            transition: transform 0.3s ease;
-        }
-
-        .skill-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.1rem 1.15rem;
         }
 
         .skill-card h3 {
-            color: var(--accent-color);
-            margin-top: 0;
+            margin: 0 0 0.4rem;
+            font-size: 0.95rem;
+            color: var(--accent);
         }
 
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
+        .skill-card p {
+            margin: 0;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
         }
 
-        h2 {
-            color: var(--accent-color);
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            text-shadow: 0 0 10px rgba(0, 180, 216, 0.3);
+        .engineering {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.35rem 1.5rem;
         }
 
-        .collapsible {
-            background: linear-gradient(to right, var(--bg-secondary), #2a2a2a);
+        .engineering ul {
+            margin: 0.5rem 0 0;
+            padding-left: 1.2rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .engineering li { margin: 0.45rem 0; }
+
+        .roadmap {
+            border-left: 3px solid var(--accent);
+            padding-left: 1rem;
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+        }
+
+        .roadmap li { margin: 0.4rem 0; }
+
+        .kbd-hint {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            background: var(--bg-deep);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .kbd-hint kbd {
+            display: inline-block;
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            font-size: 0.75rem;
             color: var(--text-primary);
-            cursor: pointer;
-            padding: 15px;
-            width: 100%;
-            border: 1px solid var(--border-color);
-            text-align: left;
-            outline: none;
-            font-size: 16px;
-            margin: 5px 0;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .collapsible:hover {
-            background: linear-gradient(to right, #2a2a2a, #333333);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .collapsible:after {
-            content: '+';
-            position: absolute;
-            right: 15px;
-            font-size: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .collapsible.active:after {
-            transform: rotate(45deg);
-        }
-
-        .content {
-            padding: 20px;
-            display: none;
-            overflow: hidden;
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            margin: 5px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .content p, .content li {
-            color: var(--text-secondary);
-            margin: 10px 0;
-        }
-
-        a {
-            color: var(--accent-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: #00d4f8;
-            text-decoration: underline;
-        }
-
-        ul {
-            padding-left: 20px;
-        }
-
-        li {
-            margin: 10px 0;
-        }
-
-        pre {
-            background-color: #2a2a2a;
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-        }
-
-        #git_portfolio_link {
-            display: block;
-            text-align: center;
-            margin-top: 30px;
-            font-size: 1.2em;
-            padding: 10px;
-            background-color: var(--bg-secondary);
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        #git_portfolio_link:hover {
-            background-color: #2a2a2a;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         footer {
-            background-color: var(--bg-secondary);
-            padding: 40px 20px;
-            margin-top: 40px;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid var(--border);
+            background: var(--bg-secondary);
+            padding: 2.5rem 1.25rem;
+            margin-top: 2rem;
         }
 
-        .footer-content {
-            max-width: 1200px;
+        .footer-inner {
+            max-width: var(--max);
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
         }
 
-        .footer-section h3 {
-            color: var(--accent-color);
-            margin-top: 0;
+        .footer-block h3 {
+            margin: 0 0 0.65rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent);
         }
 
-        .footer-section p, .footer-section a {
+        .footer-block p,
+        .footer-block a {
+            font-size: 0.9rem;
             color: var(--text-secondary);
-            margin: 10px 0;
-        }
-
-        .resume-link {
+            margin: 0.35rem 0;
             display: inline-block;
-            padding: 10px 20px;
-            background-color: var(--accent-color);
-            color: var(--text-primary);
-            text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            margin-top: 10px;
         }
 
-        .resume-link:hover {
-            background-color: #00d4f8;
-            transform: translateY(-2px);
-        }
-
-        .social-links {
+        .social-row {
             display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .social-links a {
-            color: var(--text-primary);
-            font-size: 1.5em;
-            transition: color 0.3s ease;
-        }
-
-        .social-links a:hover {
-            color: var(--accent-color);
+            flex-wrap: wrap;
+            gap: 1rem;
         }
     </style>
 </head>
 <body>
-    <div class="hero">
-        <h1>Andrew Daly</h1>
-        <p>Software Developer & Automation Enthusiast</p>
-        <p>Passionate about creating efficient solutions and improving user experiences through technology</p>
-    </div>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-    <div class="skills-section">
-        <h2 style="text-align: center; margin-bottom: 30px;">Skills & Expertise</h2>
-        <div class="skills-grid">
-            <div class="skill-card">
-                <h3>Web Development</h3>
-                <p>HTML, CSS, JavaScript</p>
+    <header class="site-header">
+        <div class="nav-inner">
+            <a class="brand" href="#top" aria-label="Home">Andrew<span>Daly</span></a>
+            <nav aria-label="Primary">
+                <ul>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#skills">Stack</a></li>
+                    <li><a href="#engineering">Engineering</a></li>
+                    <li><a href="#roadmap">Roadmap</a></li>
+                    <li><a href="#connect">Connect</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="hero" id="top">
+        <div class="hero-inner">
+            <p class="hero-kicker">GitHub Pages · static-first</p>
+            <h1>Building fast, keyboard-aware tools and reliable automation.</h1>
+            <p class="hero-lead">
+                I ship Python utilities, developer ergonomics experiments, and integrations with real APIs—from Gmail automation to local LLM agents—without losing sight of clarity and maintainability.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="https://github.com/AndrewDaly" target="_blank" rel="noopener noreferrer">View GitHub profile</a>
+                <a class="btn" href="#projects">Browse projects</a>
             </div>
-            <div class="skill-card">
-                <h3>Automation</h3>
-                <p>Email Automation, Scripting</p>
-            </div>
-            <div class="skill-card">
-                <h3>UI/UX</h3>
-                <p>User Interface Design, Accessibility</p>
-            </div>
-            <div class="skill-card">
-                <h3>Tools & Technologies</h3>
-                <p>Git, GitHub, Google APIs</p>
+            <div class="tag-row" aria-label="Focus areas">
+                <span class="tag">Python</span>
+                <span class="tag">Automation</span>
+                <span class="tag">Windows UX</span>
+                <span class="tag">APIs &amp; auth</span>
+                <span class="tag">Accessibility-minded UI</span>
             </div>
         </div>
     </div>
 
-    <div class="main-content">
-        <br>
-        <h2 style="color:#FFFFFF">Andrew Daly Github Website</h2>
-        <br>
-        <button class="collapsible">Email Message Automation Project (Type 'a' to see more)</button>
-        <div class="content">
-            <p>This project exists as a way to send out daily emails</p>
-            <p>By leveraging Google's authentication token api's, you can connect to a free gmail account programmatically</p>
-            <p>This project can be leveraged to send out daily reports, alerts, and messages</p>
-            <br>
-            <a style="color:#0696ac" id="email_automation_git_link" href="https://github.com/AndrewDaly/email_automation">Link to Github Repo</a>
-            <br>
-            <br>
-            <a href="about.html">About</a>
-        </div>
-
-        <button class="collapsible">StaticHands (Type 's' to see more)</button>
-        <div class="content">
-            <p>StaticHands is a project to improve user-computation interaction.</p>
-            <br>
-            <pre>
-                In my opinion, most computer users are interacting with their physical machines in a suboptimal manner.
-                People can type on their keyboards far faster than they can use a mouse to point and click.
-                However, the majority of software relies primarily on slower mouse-based navigation.
-                When hotkeys exist, they are often essentially an after thought or are inconsistent.
-                But unavoidably, they rely on moving your hand off the homerow keys of the keyboard to press 'ctrl'.
-                Pressing obscure key chord centered on 'ctrl' or 'alt' is slow and unwieldy and inefficient.
-                All that hinders the use of such hotkeys, which are meant to save time in the first place.
-                I believe that there is a better way for people to interact with their machines.
-                Which is why I started this project, in order to improve my own efficiency and practice some coding skills.
-                Essentially, this project revamps the 'j' key to 'ctrl', and adds a ui based keyboard navigation mode.
-                Typing 'ja' is equal to 'ctrl' + 'a', 'jf' types the 'j' key, and typing 'j' alone does nothing.
-                Additionally, 'jq' creates an overlay that flags elements of the current active window with typeable buttons.
-                The point is this can improve the actions per minute of most computer users.
-                Keyboard navigation is not only about efficiency, but also accessibility.
-                I explored AutoHotKey, however due to security concerns I elected to build my own project from open source options.
-                This also allows for complex hotkeys to made simpler too, for instance, 'alt' + 'tab', can be simply 'jg'.
-                I centered this script around 'j' because 'j' is on the homerow of the default qwerty keyboard, but is one
-                of the least frequently used letters in English.
-            </pre>
-            <p>Type 's' to return.</p>
-        </div>
-
-        <button class="collapsible">Resume information(Type 'w' to see more)</button>
-        <div class="content">
-            <p>This is the collapsible content.</p>
-            <p>Type 'w' to return.</p>
-        </div>
-
-        <button class="collapsible">Technical Accomplishments (Type 't' to see more)</button>
-        <div class="content">
-            <p>Here are some of my key technical achievements:</p>
-            <ul>
-                <li>Developed an email automation system using Google's authentication APIs</li>
-                <li>Created StaticHands, a keyboard navigation enhancement tool for improved user efficiency</li>
-                <li>Built and maintained personal website with interactive features</li>
-                <li>Implemented responsive web design principles</li>
-                <li>Developed custom keyboard shortcuts and automation scripts</li>
-            </ul>
-            <p>Type 't' to return.</p>
-        </div>
-        <br>
-        <br>
-        <a style="color:#0374ff" id="git_portfolio_link" href="https://github.com/AndrewDaly/">Link to my GitHub Porfolio (Type 'q')</a>
-    </div>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <p>Email: your.email@example.com</p>
-                <p>Location: Your Location</p>
-                <a href="resume.pdf" class="resume-link">Download Resume</a>
+    <main id="main">
+        <section id="projects" aria-labelledby="projects-heading">
+            <div class="section-head">
+                <h2 id="projects-heading">Selected work</h2>
+                <p>Repositories and experiments hosted in this site’s monorepo, plus a few linked services.</p>
             </div>
-            <div class="footer-section">
-                <h3>Connect</h3>
-                <div class="social-links">
-                    <a href="https://github.com/AndrewDaly" target="_blank">GitHub</a>
-                    <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a>
+            <div class="projects">
+                <article class="project-card" id="proj-email">
+                    <h3>Email message automation</h3>
+                    <p class="project-meta">Python · OAuth · Gmail</p>
+                    <p>Programmatic Gmail sending using Google’s auth token APIs—useful for scheduled digests, alerts, and operational email without a paid ESP dependency where appropriate.</p>
+                    <div class="project-links">
+                        <a href="https://github.com/AndrewDaly/email_automation" target="_blank" rel="noopener noreferrer">email_automation repo</a>
+                        <a href="about.html">Site about page</a>
+                    </div>
+                </article>
+
+                <article class="project-card" id="proj-statichands">
+                    <h3>StaticHands</h3>
+                    <p class="project-meta">Keyboard UX · homerow</p>
+                    <p>Homerow-friendly “leader” style chords that remap awkward Ctrl combinations, plus an overlay mode for labeling actionable UI—aimed at higher APM and better accessibility than scattered hotkeys.</p>
+                    <div class="project-links">
+                        <a href="https://github.com/AndrewDaly/AndrewDaly.github.io" target="_blank" rel="noopener noreferrer">In this monorepo</a>
+                    </div>
+                    <details class="project-expand">
+                        <summary>Design notes</summary>
+                        <p class="long">The core idea: reduce reliance on slow mouse navigation and uncomfortable Ctrl/Alt chords by centering a homerow leader key and predictable sequences—including a typed overlay for in-window targets.</p>
+                    </details>
+                </article>
+
+                <article class="project-card" id="proj-keyhints">
+                    <h3>KeyHints Everywhere</h3>
+                    <p class="project-meta">Python · Windows UI Automation</p>
+                    <p>Vimium-style two-letter hint overlays for clickable elements across Windows apps—press a global chord, type the hint, and the element is activated.</p>
+                    <div class="project-links">
+                        <a href="https://github.com/AndrewDaly/AndrewDaly.github.io/tree/main/keyhints_everywhere" target="_blank" rel="noopener noreferrer">keyhints_everywhere</a>
+                    </div>
+                </article>
+
+                <article class="project-card" id="proj-jarvis">
+                    <h3>Jarvis voice agent</h3>
+                    <p class="project-meta">Whisper · Ollama · MCP</p>
+                    <p>End-to-end voice loop: microphone → speech-to-text → local LLM reasoning → tool calls exposed through a Model Context Protocol server.</p>
+                    <div class="project-links">
+                        <a href="https://github.com/AndrewDaly/AndrewDaly.github.io/tree/main/jarvis" target="_blank" rel="noopener noreferrer">jarvis</a>
+                    </div>
+                </article>
+
+                <article class="project-card" id="proj-daily">
+                    <h3>Daily news report generator</h3>
+                    <p class="project-meta">RSS · newspaper4k · Resend</p>
+                    <p>Fetches headlines, optionally extracts article text, writes date-stamped Markdown reports, and can email summaries through Resend’s API.</p>
+                    <div class="project-links">
+                        <a href="https://github.com/AndrewDaly/AndrewDaly.github.io/tree/main/daily_review" target="_blank" rel="noopener noreferrer">daily_review</a>
+                    </div>
+                </article>
+
+                <article class="project-card" id="proj-chess">
+                    <h3>Chess automation &amp; visualization</h3>
+                    <p class="project-meta">Python · Stockfish</p>
+                    <p>Python tooling around chess engines and visualization scripts—part of a broader interest in deterministic game AI and developer-side tooling.</p>
+                    <div class="project-links">
+                        <a href="https://github.com/AndrewDaly/AndrewDaly.github.io/tree/main/chess_auto_player" target="_blank" rel="noopener noreferrer">chess_auto_player</a>
+                    </div>
+                </article>
+
+                <article class="project-card" id="proj-lightning">
+                    <h3>Lightning Explorer</h3>
+                    <p class="project-meta">Python 3.11 · explorer (in progress)</p>
+                    <p>Keyboard-first file explorer concept targeting faster fuzzy search, vim-style navigation, and workplace-grade reliability compared to default Windows Explorer.</p>
+                    <div class="project-links">
+                        <a href="https://github.com/AndrewDaly/AndrewDaly.github.io/tree/main/lightning_explorer" target="_blank" rel="noopener noreferrer">lightning_explorer</a>
+                    </div>
+                    <details class="project-expand">
+                        <summary>Planned direction</summary>
+                        <ul class="roadmap" style="border: none; padding-left: 1.1rem; margin: 0;">
+                            <li>Instant fuzzy search across names and content</li>
+                            <li>Command palette and bookmarked roots</li>
+                            <li>Preview pane and multi-tab workspaces</li>
+                        </ul>
+                    </details>
+                </article>
+            </div>
+
+            <p class="kbd-hint" aria-live="polite">
+                Power-user shortcuts (outside text fields):
+                <kbd>a</kbd> email automation ·
+                <kbd>s</kbd> StaticHands ·
+                <kbd>w</kbd> KeyHints ·
+                <kbd>t</kbd> engineering section ·
+                <kbd>q</kbd> open GitHub profile
+            </p>
+        </section>
+
+        <section id="skills" aria-labelledby="skills-heading">
+            <div class="section-head">
+                <h2 id="skills-heading">Stack &amp; practices</h2>
+                <p>What you are hiring for: pragmatic delivery across scripting, APIs, and UI affordances.</p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>Languages &amp; runtimes</h3>
+                    <p>Python 3.11+, HTML/CSS/JS, shell automation on Windows.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Systems &amp; APIs</h3>
+                    <p>REST integrations, OAuth flows, RSS pipelines, email providers (Gmail, Resend).</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Desktop &amp; UX</h3>
+                    <p>UI Automation, keyboard-first overlays, accessibility-aware navigation patterns.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Tooling</h3>
+                    <p>Git/GitHub, GitHub Pages, virtualenvs, requirements pinning, small focused modules.</p>
                 </div>
             </div>
-            <div class="footer-section">
-                <h3>About This Site</h3>
-                <p>Built with HTML, CSS, and JavaScript</p>
-                <p>Last updated: 2024</p>
+        </section>
+
+        <section id="engineering" class="engineering" aria-labelledby="engineering-heading">
+            <h2 id="engineering-heading" style="margin-top:0;font-size:1.2rem;">Engineering highlights</h2>
+            <p style="margin:0 0 0.5rem;color:var(--text-secondary);font-size:0.95rem;">Outcomes I can speak to in depth in an interview.</p>
+            <ul>
+                <li>Automated Gmail delivery using Google authentication APIs and resilient token handling.</li>
+                <li>StaticHands: custom leader-key chords and overlay navigation to reduce pointer dependency.</li>
+                <li>KeyHints Everywhere: cross-process clickable discovery via Windows UI Automation with minimal intrusion.</li>
+                <li>Jarvis pipeline: Whisper STT, Ollama-hosted LLM, MCP-exposed tools for composable actions.</li>
+                <li>This site: semantic layout, skip links, reduced-motion support, sticky nav, and static hosting on GitHub Pages.</li>
+            </ul>
+        </section>
+
+        <section id="roadmap" aria-labelledby="roadmap-heading">
+            <div class="section-head">
+                <h2 id="roadmap-heading">Site &amp; product roadmap</h2>
+                <p>Honest backlog items drawn from how this portfolio repo is evolving—not vaporware, just the next layers of polish.</p>
+            </div>
+            <ul class="roadmap">
+                <li>More interactive demos embedded directly on Pages where feasible.</li>
+                <li>Optional light/dark theme toggle with persisted preference.</li>
+                <li>Deeper write-ups (mini “engineering blog” posts) for major refactors and benchmarks.</li>
+                <li>Continued performance passes: fewer blocking assets, optimized images, and lean JS.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer id="connect">
+        <div class="footer-inner">
+            <div class="footer-block">
+                <h3>Connect</h3>
+                <p>Best first touch: GitHub issues or messages on LinkedIn once my profile URL is wired in.</p>
+                <div class="social-row">
+                    <a href="https://github.com/AndrewDaly" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="https://linkedin.com/in/andrew-daly" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                </div>
+            </div>
+            <div class="footer-block">
+                <h3>About this site</h3>
+                <p>Hand-authored HTML/CSS with a small vanilla JS layer for keyboard navigation.</p>
+                <p>Last updated: April 2026</p>
             </div>
         </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var coll = document.getElementsByClassName("collapsible");
-            var content = document.getElementsByClassName("content");
+        (function () {
+            var targets = {
+                a: document.getElementById("proj-email"),
+                s: document.getElementById("proj-statichands"),
+                w: document.getElementById("proj-keyhints"),
+                t: document.getElementById("engineering")
+            };
 
-            for (let i = 0; i < coll.length; i++) {
-                coll[i].addEventListener("click", function() {
-                    content[i].style.display = content[i].style.display === "block" ? "none" : "block";
-                });
+            function flash(el) {
+                if (!el) return;
+                el.classList.add("hot-flash");
+                el.scrollIntoView({ behavior: "smooth", block: "center" });
+                window.setTimeout(function () { el.classList.remove("hot-flash"); }, 1200);
             }
 
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'a') {
-                    content[0].style.display = content[0].style.display === "block" ? "none" : "block";
+            function isTypingContext(el) {
+                if (!el || !el.tagName) return false;
+                var tag = el.tagName.toLowerCase();
+                if (tag === "textarea" || tag === "select") return true;
+                if (tag === "input") {
+                    var type = (el.getAttribute("type") || "text").toLowerCase();
+                    return ["text", "search", "email", "url", "tel", "password", "number"].indexOf(type) !== -1;
                 }
-                if (event.key === 's') {
-                    content[1].style.display = content[1].style.display === "block" ? "none" : "block";
+                return el.isContentEditable;
+            }
+
+            document.addEventListener("keydown", function (event) {
+                if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) return;
+                if (isTypingContext(document.activeElement)) return;
+
+                var key = event.key.toLowerCase();
+                if (key === "q") {
+                    event.preventDefault();
+                    window.open("https://github.com/AndrewDaly/", "_blank", "noopener,noreferrer");
+                    return;
                 }
-                if (event.key === 'w') {
-                    content[2].style.display = content[2].style.display === "block" ? "none" : "block";
-                    console.log('Toggling content[2]');
-                    console.log(event.key);
-                }
-                if (event.key === 't') {
-                    content[3].style.display = content[3].style.display === "block" ? "none" : "block";
-                }
-                if (event.key === 'q') {
-                    window.open('https://github.com/AndrewDaly/', '_blank');
+                if (targets[key]) {
+                    event.preventDefault();
+                    flash(targets[key]);
                 }
             });
-        });
+        })();
     </script>
 </body>
 </html>

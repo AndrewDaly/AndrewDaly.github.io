@@ -55,7 +55,7 @@ This is a personal portfolio website hosted on GitHub Pages showcasing projects,
 - Site is deployed automatically via GitHub Pages
 - Changes to `main` branch go live immediately
 - Large executables (*.exe) are gitignored as of latest update
-- Keyboard shortcuts are implemented: 'a', 's', 'w', 't', 'q' for navigation
+- Keyboard shortcuts are implemented: 'a' (email project), 's' (StaticHands), 'w' (KeyHints), 't' (engineering section), 'q' (GitHub profile)
 
 ## Project-Specific Features
 - **Collapsible Sections**: Interactive project descriptions
@@ -69,7 +69,7 @@ This is a personal portfolio website hosted on GitHub Pages showcasing projects,
 3. Maintain the existing dark theme aesthetic
 4. Keep keyboard navigation functional
 5. Update README.md if adding new features
-6. Don't break existing keyboard shortcuts (a, s, w, t, q)
+6. Don't break existing keyboard shortcuts without updating `index.html` and this doc (a, s, w, t, q)
 
 ## Performance Considerations
 - Minimize external dependencies
